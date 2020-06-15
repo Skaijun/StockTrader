@@ -1,12 +1,14 @@
 <template>
   <div>
-    <h2>Portfolio</h2>
-    <app-stock v-for="(stock, index) in myStocks" :key="index" :stock="stock"></app-stock>
+    <h2>Portfolio Stocks:</h2>
+    <div class="stocks">
+      <app-stock v-for="(stock, index) in myStocks" :key="index" :stock="stock"></app-stock>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 import Stock from "./Stock.vue";
 
 export default {
@@ -15,8 +17,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      myStocks: 'stockPortfolio'
-      }),
+      myStocks: "stockPortfolio"
+    })
   },
   components: {
     appStock: Stock
@@ -24,5 +26,15 @@ export default {
 };
 </script>
 
-<style>
+<style scpped>
+.stocks {
+  display: flex;
+  flex-wrap: wrap;
+}
+@media (max-width: 860px) {
+  .stocks {
+    flex-direction: column;
+    align-items: center;
+  }
+}
 </style>

@@ -6,16 +6,19 @@
     <p>Click on 'End Day' to begin a new Day!</p>
     <br />
     <hr />
-    <h3>Your Funds: 10000</h3>
+    <h3>Your Funds: {{ myFunds | addCurrency}}</h3>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-// import Header from '@/components/Header.vue'
 
 export default {
   name: "Home",
+  computed: {
+    myFunds() {
+      return this.$store.getters.funds;
+    }
+  },
   components: {
     // appHeader: Header
   }

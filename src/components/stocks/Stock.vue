@@ -6,8 +6,19 @@
         <span>(Price: {{ stock.price }} )</span>
       </div>
       <div class="stock__bottom">
-        <input type="number" class="stock__bottom-input" placeholder="Quantity" v-model="quantity" />
-        <button class="stock__bottom-btn" @click="buyItems" :disabled="quantity <= 0">Buy</button>
+        <input
+          type="number"
+          class="stock__bottom-input"
+          :class="{'wrong-input': !isEnoughFunds}"
+          placeholder="Quantity"
+          v-model="quantity"
+        />
+        <button
+          class="stock__bottom-btn"
+          :class="{'wrong-amount': !isEnoughFunds}"
+          @click="buyItems"
+          :disabled="!isEnoughFunds || quantity <= 0"
+        >{{ isEnoughFunds ? 'Buy' : 'Too much'}}</button>
       </div>
     </div>
   </div>
@@ -20,6 +31,14 @@ export default {
     return {
       quantity: 0
     };
+  },
+  computed: {
+    myFunds() {
+      return this.$store.getters.funds;
+    },
+    isEnoughFunds() {
+      return this.myFunds >= this.stock.price * this.quantity;
+    }
   },
   methods: {
     buyItems() {
@@ -80,6 +99,17 @@ export default {
 .stock__bottom-btn:hover {
   opacity: 1;
 }
+.wrong-amount {
+  background-color: rgb(253, 152, 141);
+  color: rgb(29, 27, 27);
+}
+.wrong-amount:hover {
+  cursor: not-allowed;
+}
+.wrong-input {
+  border-color: red;
+  background-color: rgb(250, 226, 223);
+}
 
 @media (max-width: 1240px) {
   .single-stock {
@@ -90,25 +120,25 @@ export default {
 @media (max-width: 1162px) {
   .single-stock {
     margin: 10px;
-    width: 300px;
+    width: 320px;
   }
 }
 @media (max-width: 1006px) {
   .single-stock {
     margin: 10px;
-    width: 250px;
+    width: 400px;
   }
 }
 @media (max-width: 860px) {
   .single-stock {
     margin: 10px;
-    width: 400px;
+    width: 350px;
   }
 }
 @media (max-width: 450px) {
   .single-stock {
     margin: 5px;
-    width: 290px;
+    width: 320px;
   }
 }
 </style>

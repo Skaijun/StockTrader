@@ -6,8 +6,19 @@
         <span>(Price: {{ stock.price }} | Quantity: {{ stock.quantity }} )</span>
       </div>
       <div class="stock__bottom">
-        <input type="number" class="stock__bottom-input" placeholder="Quantity" v-model="quantity" />
-        <button class="stock__bottom-btn" @click="sellThisStock" :disabled="quantity <= 0">Sell</button>
+        <input
+          type="number"
+          class="stock__bottom-input"
+          :class="{'wrong-input' : !isEnoughQuantity}"
+          placeholder="Quantity"
+          v-model="quantity"
+        />
+        <button
+          class="stock__bottom-btn"
+          :class="{'wrong-amount' : !isEnoughQuantity}"
+          @click="sellThisStock"
+          :disabled="!isEnoughQuantity || quantity <= 0"
+        >{{ isEnoughQuantity ? 'Sell' : 'Not enough'}}</button>
       </div>
     </div>
   </div>
@@ -21,6 +32,11 @@ export default {
       quantity: 0
     };
   },
+  computed: {
+    isEnoughQuantity() {
+      return this.stock.quantity >= this.quantity;
+    }
+  },
   methods: {
     sellThisStock() {
       const order = {
@@ -29,7 +45,6 @@ export default {
         quantity: this.quantity
       };
       this.$store.dispatch("sellStock", order);
-      console.log(order);
       this.quantity = 0;
     }
   }
@@ -81,7 +96,17 @@ export default {
 .stock__bottom-btn:hover {
   opacity: 1;
 }
-
+.wrong-amount {
+  background-color: rgb(253, 152, 141);
+  color: rgb(29, 27, 27);
+}
+.wrong-amount:hover {
+  cursor: not-allowed;
+}
+.wrong-input {
+  border-color: red;
+  background-color: rgb(250, 226, 223);
+}
 @media (max-width: 1240px) {
   .single-stock {
     margin: 11px;
@@ -91,25 +116,25 @@ export default {
 @media (max-width: 1162px) {
   .single-stock {
     margin: 10px;
-    width: 300px;
+    width: 320px;
   }
 }
 @media (max-width: 1006px) {
   .single-stock {
     margin: 10px;
-    width: 250px;
+    width: 400px;
   }
 }
 @media (max-width: 860px) {
   .single-stock {
     margin: 10px;
-    width: 400px;
+    width: 350px;
   }
 }
 @media (max-width: 450px) {
   .single-stock {
     margin: 5px;
-    width: 290px;
+    width: 320px;
   }
 }
 </style>

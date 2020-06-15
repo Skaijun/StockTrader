@@ -2,21 +2,34 @@
   <div>
     <div id="nav">
       <div class="nav__left-inner">
-        <router-link to="/">Home</router-link> |
-        <router-link to="/portfolio">Portfolio</router-link> |
+        <router-link to="/">Home</router-link>
+        <router-link to="/portfolio">Portfolio</router-link>
         <router-link to="/stocks">Stocks</router-link>
       </div>
       <div class="nav__right-inner">
-        <button class="nav__right-end-day-btn">End Day</button>
+        <button class="nav__right-end-day-btn" @click="rndPriceOfStocks">End Day</button>
         <button class="nav__right-save-load-btn">Save & Load</button>
-        <strong>Funds: 10000</strong>
+        <strong>Funds: {{ myFunds | addCurrency }}</strong>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapGetters } from "vuex";
+
+export default {
+  computed: {
+    ...mapGetters({
+      myFunds: "funds"
+    })
+  },
+  methods: {
+    rndPriceOfStocks() {
+      this.$store.dispatch('rndStocks');
+    }
+  }
+};
 </script>
 
 <style scoped>
@@ -29,7 +42,18 @@ export default {};
   -moz-osx-font-smoothing: grayscale;
   font-weight: 700;
   margin-bottom: 100px;
+  margin-top: 30px;
+  padding: 20px;
+  background-color: rgb(226, 249, 250);
+  border-radius: 25px;
 }
+
+.nav__left-inner a + a {
+  margin-left: 10px;
+  padding-left: 10px;
+  border-left: 2px solid black;
+}
+
 .nav__right-inner button {
   margin-right: 20px;
   background-color: transparent;
@@ -47,13 +71,10 @@ export default {};
   color: #2d41ee;
   cursor: pointer;
 }
+
 .nav__right-inner button:focus,
 .nav__right-inner button:active {
   outline: none;
-}
-
-#nav {
-  padding: 30px;
 }
 
 #nav a {
@@ -66,5 +87,51 @@ export default {};
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+@media (max-width: 1000px) {
+  #nav {
+    flex-direction: column;
+  }
+  .nav__left-inner {
+    margin-bottom: 20px;
+  }
+}
+@media (max-width: 750px) {
+  .nav__left-inner {
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+  }
+  .nav__left-inner a {
+    width: 100%;
+  }
+  .nav__left-inner a + a {
+    border: none;
+    padding-left: 0;
+    margin-left: 0;
+    padding-top: 5px;
+  }
+}
+@media (max-width: 650px) {
+  .nav__right-inner button,
+  .nav__right-inner strong {
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 400;
+  }
+}
+@media (max-width: 473px) {
+  .nav__right-inner {
+    display: flex;
+    flex-direction: column;
+  }
+  .nav__right-inner button {
+    padding: 0;
+    margin: 0 0 7px 0;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: rgb(164, 241, 241);
+  }
 }
 </style>
