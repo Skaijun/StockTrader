@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <app-header></app-header>
-    <router-view />
+    <transition name="slide" mode="out-in">
+      <router-view />
+    </transition>
   </div>
 </template>
 
@@ -16,7 +18,7 @@ export default {
     appHeader: Header
   },
   created() {
-    this.$store.dispatch('initStocks');
+    this.$store.dispatch("initStocks");
   }
 };
 </script>
@@ -40,4 +42,30 @@ export default {
   margin: 0 auto;
 }
 
+.slide-enter-active {
+  animation: slide-in 300ms ease-in-out forwards;
+}
+.slide-leave-active {
+  animation: slide-out 300ms ease-in-out forwards;
+}
+@keyframes slide-in {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+@keyframes slide-out {
+  from {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+}
 </style>
