@@ -12,8 +12,12 @@
           <button class="nav__right-save-load-btn">Save & Load</button>
           <div class="nav__right-dropdown" :class="{'opened':  isDropdownOpen}">
             <ul class="nav__right-dropdown-list">
-              <li>Save</li>
-              <li>Load</li>
+              <li>
+                <a href="#" @click="saveDataToDB">Save</a>
+              </li>
+              <li>
+                <a href="#" @click="loadDataFromDB">Load</a>
+              </li>
             </ul>
           </div>
         </div>
@@ -25,6 +29,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import axios from "axios";
 
 export default {
   data() {
@@ -40,6 +45,20 @@ export default {
   methods: {
     rndPriceOfStocks() {
       this.$store.dispatch("rndStocks");
+    },
+    saveDataToDB() {
+      const data = {
+        funds: this.$store.getters.funds,
+        stockPortfolio: this.$store.getters.stockPortfolio,
+        stocks: this.$store.getters.stocks
+      };
+      axios
+        .put("/data.json", data)
+        .then(res => console.log(res))
+        .catch(err => console.log(err));
+    },
+    loadDataFromDB() {
+      this.$store.dispatch("loadData");
     }
   }
 };
