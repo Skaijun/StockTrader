@@ -7,11 +7,14 @@
     <br />
     <hr />
     <h3>Your Funds: {{ myFunds | addCurrency}}</h3>
+    <div class="login-form">
+      <app-login></app-login>
+    </div>
   </div>
 </template>
 
 <script>
-
+import Login from "../components/login/Login.vue";
 export default {
   name: "Home",
   computed: {
@@ -20,7 +23,14 @@ export default {
     }
   },
   components: {
-    // appHeader: Header
+    appLogin: Login
   }
 };
 </script>
+
+<style scoped>
+.login-form {
+  background-color: rgb(206, 202, 202);
+  padding: 30px 0;
+}
+</style>
