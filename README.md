@@ -1,4 +1,4 @@
-# stoke-trader
+# stock-trader
 
 ## Project setup
 ```
