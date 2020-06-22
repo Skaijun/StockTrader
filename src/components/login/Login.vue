@@ -40,30 +40,59 @@
           v-else-if="$v.password.$dirty && !$v.password.minLength"
         >Password must contain at least {{ $v.password.$params.minLength.min }} characters</small>
       </div>
+      <div class="input-field" v-if="isNewUser">
+        <input
+          class="name-input"
+          type="text"
+          placeholder="Name"
+          :class="{invalid: $v.name.$dirty && !$v.name.required && !name.length, valid: $v.name.$dirty && $v.name.required && name.length}"
+          v-model="name"
+        />
+        <label for="name"></label>
+      </div>
+      <div class="input-field" v-if="isNewUser">
+        <input
+          class="age-input"
+          type="number"
+          placeholder="Age"
+          :class="{invalid: $v.age.$dirty && !$v.age.required && age !== undefined, valid: $v.age.$dirty && $v.age.required}"
+          v-model="age"
+        />
+        <label for="age"></label>
+      </div>
     </div>
     <div class="card-action">
       <div>
-        <button class="card-submit" type="submit">Sign In</button>
+        <button class="card-submit" type="submit">{{ isNewUser ? 'Sign Up' : 'Sign In' }}</button>
       </div>
       <div class="card-registration">
-        <p>Still don't have an acc?</p>
-        <button class="card-signup">Sign Up</button>
+        <p>
+          {{ isNewUser ? 'Already registered? Then ' : "Still don't have an acc?" }}
+          <span
+            @click="switchLoginForm"
+          >{{ isNewUser ? 'Sign In' : 'Sign Up' }}</span>
+        </p>
       </div>
     </div>
   </form>
 </template>
 
 <script>
-// import axios from "../../axios-auth/axios-auth.js";
+import axios from "../../axios-auth/axios-auth.js";
 import { email, required, minLength } from "vuelidate/lib/validators";
 
 export default {
   name: "login",
   data: () => ({
     email: "",
-    password: ""
+    password: "",
+    name: "",
+    age: null,
+    isNewUser: false
   }),
   validations: {
+    name: { required },
+    age: { required },
     email: { email, required },
     password: { required, minLength: minLength(6) }
   },
@@ -79,6 +108,25 @@ export default {
       };
       console.log(formData);
       this.$router.push("/stocks");
+    },
+    switchLoginForm() {
+      this.isNewUser = !this.isNewUser;
+      this.email = "";
+      this.password = "";
+      this.name = "";
+      this.age = null;
+    },
+    signUp() {
+      const formData = {
+        email: this.emal,
+        password: this.password,
+        age: this.age,
+        name: this.name
+      };
+      axios
+        .post("/users.json", formData)
+        .the(res => console.log(res))
+        .catch(err => console.log(err));
     }
   }
 };
@@ -116,15 +164,21 @@ export default {
   width: 100%;
 }
 .input-field .email-input,
-.input-field .password-input {
+.input-field .password-input,
+.input-field .age-input,
+.input-field .name-input {
   border-bottom: 2px solid rgb(82, 79, 79);
 }
 .email-input.invalid,
-.password-input.invalid {
+.password-input.invalid,
+.age-input.invalid,
+.name-input.invalid {
   border-bottom: 2px solid red;
 }
 .email-input.valid,
-.password-input.valid {
+.password-input.valid,
+.age-input.valid,
+.name-input.valid {
   border-bottom: 2px solid rgb(44, 175, 17);
 }
 .heler-text {
@@ -176,5 +230,16 @@ export default {
 .card-signup:hover {
   opacity: 1;
   background-color: rgb(240, 129, 109);
+}
+.card-action span {
+  color: blue;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.4s ease-in-out;
+}
+.card-action span:hover {
+  opacity: 1;
 }
 </style>
