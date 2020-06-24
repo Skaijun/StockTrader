@@ -8,8 +8,8 @@
           type="text"
           placeholder="Email"
           v-model.trim="email"
-          :class="{invalid: ($v.email.$dirty && !$v.email.required) || ($v.email.$dirty && !$v.email.email),
-          valid: ($v.email.$dirty && $v.email.email && email.length)}"
+          :class="{invalid: ($v.email.$dirty && !$v.email.required) || ($v.email.$dirty && !$v.email.email || userLoginData.isEmailTrue == 'wrong'),
+          valid: (($v.email.$dirty && $v.email.email && email.length) || userLoginData.isEmailTrue == 'ok')}"
         />
         <label for="email"></label>
         <small
@@ -27,8 +27,8 @@
           type="password"
           placeholder="Password"
           v-model="password"
-          :class="{invalid: ($v.password.$dirty && !$v.password.required) || ($v.password.$dirty && !$v.password.minLength),
-          valid: ($v.email.$dirty && $v.password.minLength && password.length)}"
+          :class="{invalid: ($v.password.$dirty && !$v.password.required) || ($v.password.$dirty && !$v.password.minLength || userLoginData.isPasswordTrue == 'wrong'),
+          valid: (($v.email.$dirty && $v.password.minLength && password.length) || userLoginData.isPasswordTrue == 'ok')}"
         />
         <label for="password"></label>
         <small
@@ -78,8 +78,8 @@
 </template>
 
 <script>
-import axios from "../../axios-auth/axios-auth.js";
 import { email, required, minLength } from "vuelidate/lib/validators";
+// import axios from "axios";
 
 export default {
   name: "login",
@@ -88,7 +88,11 @@ export default {
     password: "",
     name: "",
     age: null,
-    isNewUser: false
+    isNewUser: false,
+    userLoginData: {
+      isEmailTrue: "",
+      isPasswordTrue: ""
+    }
   }),
   validations: {
     name: { required },
@@ -98,35 +102,52 @@ export default {
   },
   methods: {
     submitHandler() {
-      if (this.$v.$invalid) {
-        this.$v.$touch();
-        return;
+      if (this.isNewUser) {
+        if (this.$v.$invalid) {
+          this.$v.$touch();
+          return;
+        } else {
+          this.signUp();
+          this.$router.push("/stocks");
+        }
+      } else {
+        this.checkUserLoginData();
+        if (
+          this.userLoginData.isEmailTrue == "ok" &&
+          this.userLoginData.isPasswordTrue == "ok"
+        ) {
+          this.signIn();
+        }
       }
-      const formData = {
-        email: this.email,
-        password: this.password
-      };
-      console.log(formData);
-      this.$router.push("/stocks");
     },
     switchLoginForm() {
       this.isNewUser = !this.isNewUser;
+      this.resetInputs();
+    },
+    resetInputs() {
       this.email = "";
       this.password = "";
       this.name = "";
       this.age = null;
     },
     signUp() {
-      const formData = {
-        email: this.emal,
+      this.$store.dispatch("signUp", {
+        email: this.email,
         password: this.password,
-        age: this.age,
-        name: this.name
-      };
-      axios
-        .post("/users.json", formData)
-        .the(res => console.log(res))
-        .catch(err => console.log(err));
+        name: this.name,
+        age: this.age
+      });
+    },
+    signIn() {
+      this.$store.dispatch("signIn", {
+        email: this.email,
+        password: this.password
+      });
+    },
+    checkUserLoginData() {
+      this.userLoginData.isEmailTrue = "ok";
+      this.userLoginData.isPasswordTrue = "ok";
+
     }
   }
 };

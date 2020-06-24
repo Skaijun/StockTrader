@@ -7,8 +7,8 @@
         <router-link to="/stocks">Stocks</router-link>
       </div>
       <div class="nav__right-inner">
-        <button class="nav__right-end-day-btn" @click="rndPriceOfStocks">End Day</button>
-        <div class="nav__right-save-load" @click="isDropdownOpen = !isDropdownOpen">
+        <button v-if="auth" class="nav__right-end-day-btn" @click="rndPriceOfStocks">End Day</button>
+        <div v-if="auth" class="nav__right-save-load" @click="isDropdownOpen = !isDropdownOpen">
           <button class="nav__right-save-load-btn">Save & Load</button>
           <div class="nav__right-dropdown" :class="{'opened':  isDropdownOpen}">
             <ul class="nav__right-dropdown-list">
@@ -21,7 +21,8 @@
             </ul>
           </div>
         </div>
-        <strong>Funds: {{ myFunds | addCurrency }}</strong>
+        <strong v-if="auth">Funds: {{ myFunds | addCurrency }}</strong>
+        <strong v-if="!auth">Logout</strong>
       </div>
     </div>
   </div>
@@ -39,7 +40,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      myFunds: "funds"
+      myFunds: "funds",
+      auth: "isAuthenticated"
     })
   },
   methods: {

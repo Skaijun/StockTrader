@@ -18,7 +18,7 @@ export default {
     appHeader: Header
   },
   created() {
-    this.$store.dispatch("initStocks");
+    this.$store.dispatch("initStocks");    
   }
 };
 </script>
