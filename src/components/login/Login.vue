@@ -1,5 +1,5 @@
 <template>
-  <form class="card auth-card" @submit.prevent="submitHandler">
+  <form v-if="!isAuth" class="card auth-card" @submit.prevent="submitHandler">
     <div class="card-content">
       <span class="card-title">Stock Trader Platform</span>
       <div class="input-field">
@@ -8,8 +8,8 @@
           type="text"
           placeholder="Email"
           v-model.trim="email"
-          :class="{invalid: ($v.email.$dirty && !$v.email.required) || ($v.email.$dirty && !$v.email.email || userLoginData.isEmailTrue == 'wrong'),
-          valid: (($v.email.$dirty && $v.email.email && email.length) || userLoginData.isEmailTrue == 'ok')}"
+          :class="{invalid: ($v.email.$dirty && !$v.email.required) || ($v.email.$dirty && !$v.email.email),
+          valid: $v.email.$dirty && $v.email.email && email.length}"
         />
         <label for="email"></label>
         <small
@@ -27,8 +27,8 @@
           type="password"
           placeholder="Password"
           v-model="password"
-          :class="{invalid: ($v.password.$dirty && !$v.password.required) || ($v.password.$dirty && !$v.password.minLength || userLoginData.isPasswordTrue == 'wrong'),
-          valid: (($v.email.$dirty && $v.password.minLength && password.length) || userLoginData.isPasswordTrue == 'ok')}"
+          :class="{invalid: ($v.password.$dirty && !$v.password.required) || ($v.password.$dirty && !$v.password.minLength),
+          valid: $v.email.$dirty && $v.password.minLength && password.length}"
         />
         <label for="password"></label>
         <small
@@ -94,6 +94,11 @@ export default {
       isPasswordTrue: ""
     }
   }),
+  computed: {
+    isAuth() {
+      return this.$store.getters.isAuthenticated;
+    }
+  },
   validations: {
     name: { required },
     age: { required },
@@ -147,7 +152,6 @@ export default {
     checkUserLoginData() {
       this.userLoginData.isEmailTrue = "ok";
       this.userLoginData.isPasswordTrue = "ok";
-
     }
   }
 };

@@ -10,14 +10,16 @@
           type="number"
           class="stock__bottom-input"
           :class="{'wrong-input': !isEnoughFunds}"
+          :disabled="!isAuth"
           placeholder="Quantity"
           v-model="quantity"
+          @input="containsZeroAtTheBegining"
         />
         <button
           class="stock__bottom-btn"
           :class="{'wrong-amount': !isEnoughFunds}"
           @click="buyItems"
-          :disabled="!isEnoughFunds || quantity <= 0"
+          :disabled="!isEnoughFunds || quantity <= 0 || !isAuth"
         >{{ isEnoughFunds ? 'Buy' : 'Too much'}}</button>
       </div>
     </div>
@@ -29,7 +31,7 @@ export default {
   props: ["stock"],
   data() {
     return {
-      quantity: 0
+      quantity: ""
     };
   },
   computed: {
@@ -38,6 +40,9 @@ export default {
     },
     isEnoughFunds() {
       return this.myFunds >= this.stock.price * this.quantity;
+    },
+    isAuth() {
+      return this.$store.getters.isAuthenticated;
     }
   },
   methods: {
@@ -49,6 +54,12 @@ export default {
       };
       this.$store.dispatch("buyStock", order);
       this.quantity = 0;
+    },
+    containsZeroAtTheBegining() {
+      const val = event.target.value;
+      if (val.match(/^0/)) {
+        this.quantity = this.quantity.replace(0, "");
+      }
     }
   }
 };

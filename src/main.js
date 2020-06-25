@@ -11,7 +11,7 @@ Vue.use(Vuelidate);
 
 axios.defaults.baseURL = "https://stoke-strader.firebaseio.com";
 
-Vue.filter("addCurrency", function(value) {
+Vue.filter("addCurrency", function (value) {
   return "$" + value.toLocaleString();
 });
 

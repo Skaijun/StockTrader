@@ -12,6 +12,7 @@
           :class="{'wrong-input' : !isEnoughQuantity}"
           placeholder="Quantity"
           v-model="quantity"
+          @input="containsZeroAtTheBegining"
         />
         <button
           class="stock__bottom-btn"
@@ -29,12 +30,12 @@ export default {
   props: ["stock"],
   data() {
     return {
-      quantity: 0
+      quantity: null
     };
   },
   computed: {
     isEnoughQuantity() {
-      return this.stock.quantity >= this.quantity;
+      return +this.stock.quantity >= +this.quantity;
     }
   },
   methods: {
@@ -46,6 +47,12 @@ export default {
       };
       this.$store.dispatch("sellStock", order);
       this.quantity = 0;
+    },
+    containsZeroAtTheBegining() {
+      const val = event.target.value;
+      if (val.match(/^0/)) {
+        this.quantity = this.quantity.replace(0, "");
+      }
     }
   }
 };

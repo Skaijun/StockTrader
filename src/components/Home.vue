@@ -6,7 +6,7 @@
     <p>Click on 'End Day' to begin a new Day!</p>
     <br />
     <hr />
-    <h3>Your Funds: {{ myFunds | addCurrency}}</h3>
+    <h3 v-if="isAuth">Your Funds: {{ myFunds | addCurrency}}</h3>
     <div class="login-form">
       <app-login></app-login>
     </div>
@@ -20,6 +20,9 @@ export default {
   computed: {
     myFunds() {
       return this.$store.getters.funds;
+    },
+    isAuth() {
+      return this.$store.getters.isAuthenticated;
     }
   },
   components: {
