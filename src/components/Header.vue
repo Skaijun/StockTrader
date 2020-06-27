@@ -3,7 +3,7 @@
     <div id="nav">
       <div class="nav__left-inner">
         <router-link to="/">Home</router-link>
-        <router-link to="/portfolio">Portfolio</router-link>
+        <router-link v-if="auth" to="/portfolio">Portfolio</router-link>
         <router-link to="/stocks">Stocks</router-link>
       </div>
       <div class="nav__right-inner">
@@ -55,7 +55,7 @@ export default {
         stocks: this.$store.getters.stocks
       };
       axios
-        .put("/data.json", data)
+        .put("/data.json" + "?auth=" + this.$store.getters.userIdToken, data)
         .then(res => console.log(res))
         .catch(err => console.log(err));
     },
@@ -110,6 +110,9 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.nav__right-save-load-btn {
+  margin-bottom: 2px;
 }
 .nav__right-inner button:hover {
   color: #2d41ee;

@@ -1,6 +1,6 @@
 import axios from "../../axios-auth/axios-auth.js";
 import globalAxios from "axios";
-import router from '../../router/index.js';
+import router from "../../router/index.js";
 
 const state = {
   idToken: null,
@@ -19,7 +19,7 @@ const mutations = {
   userLogout(state) {
     state.idToken = null;
     state.userId = null;
-  }
+  },
 };
 
 const actions = {
@@ -33,8 +33,8 @@ const actions = {
         returnSecureToken: true,
       })
       .then((res) => {
-        localStorage.setItem('token', res.data.idToken);
-        localStorage.setItem('userId', res.data.localId);
+        localStorage.setItem("token", res.data.idToken);
+        localStorage.setItem("userId", res.data.localId);
         console.log(res);
         commit("userAuth", {
           token: res.data.idToken,
@@ -55,8 +55,8 @@ const actions = {
         }
       )
       .then((res) => {
-        localStorage.setItem('token', res.data.idToken);
-        localStorage.setItem('userId', res.data.localId);
+        localStorage.setItem("token", res.data.idToken);
+        localStorage.setItem("userId", res.data.localId);
         console.log(res);
         commit("userAuth", {
           token: res.data.idToken,
@@ -65,7 +65,6 @@ const actions = {
       })
       .catch((err) => console.log(err));
   },
-  // storeUser({ commit }, userData) {
   storeUser({ state }, userData) {
     if (!state.idToken) {
       return;
@@ -92,21 +91,21 @@ const actions = {
       .catch((err) => console.log(err));
   },
   logout({ commit }) {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    commit('userLogout');
-    router.replace('/');
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    commit("userLogout");
+    router.replace("/");
   },
   tryUserAutoLogin({ commit }) {
-    const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
     if (token && userId) {
-      commit('userAuth', {
+      commit("userAuth", {
         token: token,
-        userId: userId
-      })
+        userId: userId,
+      });
     }
-  }
+  },
 };
 
 const getters = {
@@ -115,6 +114,9 @@ const getters = {
   },
   isAuthenticated(state) {
     return state.idToken !== null;
+  },
+  userIdToken(state) {
+    return state.idToken;
   },
 };
 

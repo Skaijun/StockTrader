@@ -2,8 +2,7 @@
   <div>
     <h2>Portfolio Stocks:</h2>
     <div class="user-info" v-if="name && age">
-      <h5>{{ 'Name: ' + name }}</h5>
-      <h5>{{ 'Age: ' + age }}</h5>
+      <p>{{ 'Name: ' + name + '; Age: ' + age + '; Email: ' + email}}</p>
     </div>
     <div class="stocks">
       <app-stock v-for="(stock, index) in myStocks" :key="index" :stock="stock"></app-stock>
